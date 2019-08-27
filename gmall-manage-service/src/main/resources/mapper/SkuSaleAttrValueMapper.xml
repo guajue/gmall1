@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.guajue.gmall.mangeservice.mapper.SkuSaleAttrValueMapper" >
+    <!--public List<SkuSaleAttrValue> selectSkuSaleAttrValueListBySpu (String spuId);-->
+    <select id="selectSkuSaleAttrValueListBySpu" resultMap="skuSaleAttrValueMap">
+    select ss.id,sale_attr_value_id,
+	sku_id,
+	sale_attr_value_name
+    from sku_sale_attr_value ss inner JOIN sku_info si
+    on ss.sku_id = si.id
+    and si.spu_id = #{spuId}
+    ORDER BY si.id ,ss.sale_attr_id
+    </select>
+
+    <resultMap id="skuSaleAttrValueMap" type="com.guajue.gmall.bean.SkuSaleAttrValue" autoMapping="true">
+        <id property="id"  column="id"></id>
+    </resultMap>
+
+
+
+
+
+
+</mapper>

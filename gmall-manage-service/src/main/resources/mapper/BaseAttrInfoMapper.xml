@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.guajue.gmall.mangeservice.mapper.BaseAttrInfoMapper">
+    <!--List<BaseAttrInfo> getBaseAttrInfoListByCatalog3Id(Long catalog3Id);-->
+    <select id="getBaseAttrInfoListByCatalog3Id" parameterType="long" resultMap="baseAttrInfoMap">
+        SELECT ba.id id,ba.attr_name attrName ,ba.catalog3_id catalog3Id,
+        bv.id bid,bv.value_name valueName
+        from base_attr_info ba INNER JOIN base_attr_value bv
+        on ba.id = bv.attr_id
+        where ba.catalog3_id =  #{catalog3Id}
+    </select>
+
+    <resultMap id="baseAttrInfoMap" type="com.guajue.gmall.bean.BaseAttrInfo" >
+        <result property="id"  column="id"></result>
+        <result property="attrName"  column="attrName"></result>
+        <result property="catalog3Id"  column="catalog3Id"></result>
+        <collection property="attrValueList" ofType="com.guajue.gmall.bean.BaseAttrValue">
+            <result property="id"  column="bid"></result>
+            <result property="valueName"  column="valueName"></result>
+            <result property="attrId"  column="id"></result>
+        </collection>
+    </resultMap>
+
+
+    <!--List<BaseAttrInfo> selectAttrInfoListByIds(String ids);-->
+    <select id="selectAttrInfoListByIds" resultMap="baseAttrInfoResultMap">
+     SELECT ai.id,ai.attr_name,ai.catalog3_id, av.id aid ,av.attr_id ,av.value_name
+    FROM base_attr_info ai INNER JOIN base_attr_value av ON ai.id=av.attr_id
+    WHERE av.id IN (${ids})
+    </select>
+
+    <resultMap id="baseAttrInfoResultMap" type="com.guajue.gmall.bean.BaseAttrInfo" autoMapping="true">
+        <result property="id"  column="id"></result>
+        <collection property="attrValueList" ofType="com.guajue.gmall.bean.BaseAttrValue" autoMapping="true">
+            <result property="id"  column="aid"></result>
+        </collection>
+
+
+    </resultMap>
+
+
+
+</mapper>

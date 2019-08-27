@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.guajue.gmall.mangeservice.mapper.SpuSaleAttrMapper" >
+
+    <!--List<SpuSaleAttr> selectSpuSaleAttrList(long spuId);-->
+    <select id="selectSpuSaleAttrList" parameterType="long" resultMap="spuSaleAttrMap">
+    select sa.id id, sa.spu_id spuId,sa.sale_attr_name saleAttrName,sa.sale_attr_id saleAttrId,
+    sv.sale_attr_value_name saleAttrValueName,sv.id sid
+    from spu_sale_attr sa INNER JOIN spu_sale_attr_value sv
+    on sa.spu_id = sv.spu_id
+    and sa.sale_attr_id = sv.sale_attr_id
+    where sv.spu_id = #{spuId}
+    </select>
+    
+    <resultMap id="spuSaleAttrMap" type="com.guajue.gmall.bean.SpuSaleAttr">
+        <result property="id" column="id"></result>
+        <result property="spuId" column="spuId"></result>
+        <result property="saleAttrId" column="saleAttrId"></result>
+        <result property="saleAttrName" column="saleAttrName"></result>
+
+        <collection property="spuSaleAttrValueList" ofType="com.guajue.gmall.bean.SpuSaleAttrValue" >
+            <result property="id" column="sid"></result>
+            <result property="spuId" column="spuId"></result>
+            <result property="saleAttrId" column="saleAttrId"></result>
+            <result property="saleAttrValueName" column="saleAttrValueName"></result>
+        </collection>
+    </resultMap>
+
+    <!-- List<SpuSaleAttr> selectSpuSaleAttrListCheckBySku(String skuId, String spuId);-->
+    <select id="selectSpuSaleAttrListCheckBySku"  resultMap="spuSaleAttrMapCheckBySku" >
+        select  sa.id id ,sa.spu_id, sa.sale_attr_name ,sa.sale_attr_id ,
+        sv.id sid,
+        sv.sale_attr_value_name ,
+        if(ss.sku_id is not null,1,0) is_checked
+        from spu_sale_attr sa INNER JOIN spu_sale_attr_value sv
+        on sa.spu_id = sv.spu_id and sa.sale_attr_id = sv.sale_attr_id
+        LEFT JOIN  sku_sale_attr_value  ss on ss.sale_attr_value_id = sv.id
+        and  ss.sku_id = #{arg0}
+        where sa.spu_id = #{arg1}
+        ORDER BY sa.id ,sv.id
+    </select>
+
+    <resultMap id="spuSaleAttrMapCheckBySku" type="com.guajue.gmall.bean.SpuSaleAttr" autoMapping="true">
+        <id property="id" column="id"></id>
+        <!--<result property="spuId" column="spuId"></result>
+        <result property="saleAttrId" column="saleAttrId"></result>
+        <result property="saleAttrName " column="saleAttrName"></result>-->
+
+        <collection property="spuSaleAttrValueList" autoMapping="true" ofType="com.guajue.gmall.bean.SpuSaleAttrValue">
+            <id property="id" column="sid"></id>
+            <!--<result property="spuId" column="spuId" ></result>
+            <result property="saleAttrId" column="saleAttrId" ></result>
+            <result property="saleAttrValueName" column="saleAttrValueName" ></result>
+            <result property="isChecked" column="isChecked" ></result>-->
+
+        </collection>
+    </resultMap>
+
+
+</mapper>

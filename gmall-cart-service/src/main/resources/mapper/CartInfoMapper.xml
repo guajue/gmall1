@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.guajue.gmall.cartservice.mapper.CartInfoMapper">
+
+    <!--List<CartInfo> selectCartListWithCurPrice(String userId);-->
+    <select id="selectCartListWithCurPrice" resultMap="cartMap">
+        SELECT c.id,s.price ,c.img_url,c.sku_id,c.sku_name,c.sku_num,c.user_id,c.cart_price
+        from cart_info c INNER JOIN sku_info s
+        on c.sku_id = s.id
+        where c.user_id = #{userId};
+
+    </select>
+
+    <resultMap id="cartMap" type="com.guajue.gmall.bean.CartInfo">
+        <result property="id" column="id" ></result>
+        <result property="skuPrice" column="price" ></result>
+    </resultMap>
+
+</mapper>
